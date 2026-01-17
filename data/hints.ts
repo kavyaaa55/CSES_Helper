@@ -1,19 +1,6 @@
-// const HINTS = {
-//   "1638": [
-//     "What is the smallest subproblem you can solve?",
-//     "Can the answer be built row by row or cell by cell?",
-//     "How do blocked cells affect transitions?"
-//   ],
-//   "1069": [
-//     "Think about how consecutive characters behave.",
-//     "Can you solve it in one pass?",
-//     "What state do you really need to track?"
-//   ]
-// };
-//
-// export default HINTS;
-//
+
 const HINTS = {
+  //graphs 
   "1192": [
     "What graph traversal visits all connected components in a grid?",
     "How can you mark visited cells so you don’t recount a room?",
@@ -306,7 +293,249 @@ const HINTS = {
     "Which moves are allowed?",
     "How do you avoid revisiting cells?",
     "Can pruning reduce search?"
+  ],
+
+
+  //dynamic porgramming;
+  "1633": [
+    "What is the smallest sum you can form?",
+    "If you know ways to form smaller sums, how can you reach a bigger sum?",
+    "Does order of dice rolls matter?"
+  ],
+  "1634": [
+    "What is the minimum coins needed for sum 0?",
+    "How does adding one coin change the answer?",
+    "Can you build the answer bottom-up?"
+  ],
+  "1635": [
+    "Does the order of coins matter here?",
+    "What does dp[x] represent?",
+    "How do previous sums contribute to the current sum?"
+  ],
+  "1636": [
+    "Does the order of coins matter in this version?",
+    "What happens if you process coins one by one?",
+    "How do you avoid counting the same combination twice?"
+  ],
+  "1637": [
+    "What is the fastest way to reduce a number to zero?",
+    "What choices do you have at each step?",
+    "Can dp[n] depend on dp[n - digit]?"
+  ],
+  "1638": [
+    "What is the base case for the grid?",
+    "From which directions can you come to a cell?",
+    "How do blocked cells affect transitions?"
+  ],
+  "1158": [
+    "What are the constraints on money and books?",
+    "What does dp[x] represent?",
+    "Is this similar to knapsack?"
+  ],
+  "1746": [
+    "What does dp[i][x] mean?",
+    "How does the previous position affect the current?",
+    "How do you handle unknown values?"
+  ],
+  "2413": [
+    "What patterns repeat in small widths?",
+    "Can you derive a recurrence relation?",
+    "How do states transition between levels?"
+  ],
+  "1639": [
+    "What operations are allowed to transform strings?",
+    "How does dp[i][j] relate to prefixes?",
+    "What is the base case for empty strings?"
+  ],
+  "1640": [
+    "What is the relationship between two sequences?",
+    "What does dp[i][j] represent?",
+    "How do you extend a common subsequence?"
+  ],
+  "1744": [
+    "What is the simplest rectangle you can cut?",
+    "How can one cut reduce the problem size?",
+    "Can you try all possible cuts?"
+  ],
+  "1745": [
+    "What is the cost to reach a cell?",
+    "From where can you move?",
+    "Can you relax values like shortest path?"
+  ],
+  "1743": [
+    "What sums are achievable?",
+    "How does adding one coin change reachable sums?",
+    "Can you use a boolean DP?"
+  ],
+  "1097": [
+    "What choices do players have?",
+    "How does optimal play affect the result?",
+    "Can dp[l][r] represent the best score?"
+  ],
+  "1093": [
+    "How does this differ from Two Sets I?",
+    "What does dp[x] represent?",
+    "How do you avoid double counting?"
+  ],
+  "1148": [
+    "What defines a valid mountain?",
+    "Can you split the problem into left and right?",
+    "How does DP help count ranges?"
+  ],
+  "1145": [
+    "What is the LIS definition?",
+    "Can dp[i] represent LIS ending at i?",
+    "Is there a faster method than O(n²)?"
+  ],
+  "1140": [
+    "How do you choose non-overlapping projects?",
+    "What happens if you skip or take a project?",
+    "Can sorting help simplify transitions?"
+  ],
+  "1653": [
+    "What does a state represent?",
+    "Can bitmasking represent taken people?",
+    "How do you minimize rides?"
+  ],
+  "2415": [
+    "What patterns repeat across rows?",
+    "How do column states interact?",
+    "Can you precompute transitions?"
+  ],
+  "2220": [
+    "How do you count numbers with constraints?",
+    "Can digit DP help here?",
+    "What state tracks tight and previous digits?"
+  ],
+  "1146": [
+    "What does dp[i] represent?",
+    "How can you optimize transitions?",
+    "Why is patience sorting relevant?"
+  ],
+
+
+  //range queries;
+  "1646": [
+    "What preprocessing lets you answer range sums in O(1)?",
+    "How does prefix sum help subtract a range?",
+    "What is the base case?"
+  ],
+  "1647": [
+    "What structure supports fast range minimum queries?",
+    "Can preprocessing help avoid recomputation?",
+    "How do overlapping intervals help?"
+  ],
+  "1648": [
+    "How can you support point updates efficiently?",
+    "Which data structure handles updates + queries?",
+    "What does each node store?"
+  ],
+  "1649": [
+    "How do you maintain minimum with updates?",
+    "What tree structure helps here?",
+    "How do updates propagate?"
+  ],
+  "1650": [
+    "What operation combines subranges?",
+    "Why is XOR suitable for prefix technique?",
+    "How do you answer queries fast?"
+  ],
+  "1651": [
+    "How do you apply updates lazily?",
+    "Can difference arrays help?",
+    "How do queries retrieve final values?"
+  ],
+  "1652": [
+    "How do you preprocess a 2D grid?",
+    "How does inclusion-exclusion work?",
+    "How do you answer rectangle queries?"
+  ],
+  "1143": [
+    "What data structure can assign rooms greedily?",
+    "How do you find the first valid position?",
+    "How do updates affect future queries?"
+  ],
+  "1749": [
+    "How do you remove elements efficiently?",
+    "What structure tracks current positions?",
+    "Can Fenwick Tree simulate removals?"
+  ],
+  "1144": [
+    "How do you count values in a range?",
+    "What preprocessing helps with dynamic updates?",
+    "Can coordinate compression help?"
+  ],
+  "2166": [
+    "What prefix structure supports queries?",
+    "How does reversing affect computation?",
+    "Can offline queries simplify it?"
+  ],
+  "2206": [
+    "How do distances change after updates?",
+    "What structure supports circular ranges?",
+    "Can segment tree handle this?"
+  ],
+  "2169": [
+    "What determines visibility?",
+    "Can monotonic stacks help?",
+    "How do queries reuse preprocessing?"
+  ],
+  "2216": [
+    "How do you merge overlapping intervals?",
+    "What structure stores active intervals?",
+    "How do queries depend on endpoints?"
+  ],
+  "1643": [
+    "What is the best subarray ending here?",
+    "How does prefix min help?",
+    "Can you reduce it to max difference?"
+  ],
+  "1644": [
+    "How many subarrays satisfy the condition?",
+    "What prefix sums are useful?",
+    "Can maps or compression help?"
+  ],
+  "1734": [
+    "How do you track distinct elements?",
+    "Can offline queries help?",
+    "What does last occurrence store?"
+  ],
+  "1735": [
+    "How do updates affect distinct counts?",
+    "What structure tracks frequencies?",
+    "Can Mo’s algorithm help?"
+  ],
+  "2416": [
+    "How do values change after each operation?",
+    "What structure supports range increments?",
+    "How do you answer queries efficiently?"
+  ],
+  "1739": [
+    "How do you answer 2D queries with updates?",
+    "What structure splits dimensions?",
+    "How do updates propagate?"
+  ],
+  "1736": [
+    "How do you combine range updates and sums?",
+    "What does lazy propagation store?",
+    "How do queries pull correct values?"
+  ],
+  "1737": [
+    "How do polynomials change under updates?",
+    "What extra info must nodes store?",
+    "How does lazy propagation extend?"
+  ],
+  "1738": [
+    "How do persistent structures help?",
+    "What changes between versions?",
+    "How do queries choose versions?"
+  ],
+  "2187": [
+    "What is the smallest missing sum?",
+    "How does sorting coins help?",
+    "How do queries reuse prefix coverage?"
   ]
+
 };
 
 export default HINTS;

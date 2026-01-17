@@ -1,7 +1,11 @@
 export const getStyles = () => {
   // Check body background color to detect CSES theme
   const bodyBg = getComputedStyle(document.body).backgroundColor;
-  const isDark = bodyBg === 'rgb(34, 34, 34)' || bodyBg === 'rgb(0, 0, 0)' || bodyBg === 'rgb(17, 17, 17)';
+  const isDark = bodyBg !== 'rgb(255, 255, 255)'
+  //|| bodyBg === 'rgb(0, 0, 0)' || bodyBg === 'rgb(17, 17, 17)';
+
+
+
 
   console.log('🎨 Body BG:', bodyBg, '| isDark:', isDark); // Debug
 
@@ -29,7 +33,7 @@ export const getStyles = () => {
     hintContentGrey: {
       padding: "12px",
       margin: "5px 0 10px 0",
-      backgroundColor: isDark ? "#262626" : "#e8e8e8",
+      backgroundColor: isDark ? "#262626" : "#fafafa",
       border: isDark ? "1px solid #333" : "1px solid #e5e5e5",
       borderRadius: "4px",
       color: isDark ? "#ccc" : "#333",
@@ -39,7 +43,7 @@ export const getStyles = () => {
     hintContentBlue: {
       padding: "12px",
       margin: "5px 0 10px 0",
-      backgroundColor: isDark ? "#1a2a36" : "#e8e8e8",
+      backgroundColor: isDark ? "#1a2a36" : "#fafafa",
       border: isDark ? "1px solid #35597a" : "1px solid #e5e5e5",
       borderRadius: "4px",
       color: isDark ? "#ccc" : "#333",
@@ -48,7 +52,7 @@ export const getStyles = () => {
     topicTagStyle: {
       background: isDark ? "#2a4a66" : "#e8e8e8",
       color: isDark ? "#b5e0ff" : "#333",
-      border: isDark ? "1px solid #4a6a8a" : "1px solid #ccc",
+      border: isDark ? "1px solid #4a6a8a" : "1px solid #d0d0d0",
       borderRadius: "3px",
       padding: "2px 8px",
       fontSize: "12px",

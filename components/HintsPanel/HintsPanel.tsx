@@ -6,6 +6,7 @@ import PROBLEM_RESOURCES from "@/data/resources";
 import HintItem from "./HintItem";
 import TopicsPanel from "./TopicsPanel.tsx";
 import ResourcesPanel from "./ResourcesPanel.tsx";
+import ViewSolution from "./ViewsolutionPanel.tsx";
 //import { containerStyle } from "./styles";
 
 import { getStyles } from "./styles";
@@ -43,6 +44,10 @@ export default function HintsPanel({ problemId }: Props) {
         topics={topics}
         open={!!open.topics}
         toggle={() => toggle("topics")}
+      />
+
+      <ViewSolution
+        questionId={problemId}
       />
 
       <ResourcesPanel

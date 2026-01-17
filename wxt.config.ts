@@ -17,7 +17,10 @@ export default defineConfig({
     // },
 
     permissions: ["storage"],
-    host_permissions: ["https://cses.fi/*"],
+    host_permissions: [
+      "http://localhost:3000/*",
+      "https://your-backend.vercel.app/*",
+      "https://cses.fi/*"],
   },
 });
 
