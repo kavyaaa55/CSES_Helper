@@ -11,9 +11,9 @@ export default defineConfig({
     },
 
     // icons: {
-    //   "16": "icons/icon16.png",
-    //   "48": "icons/icon48.png",
-    //   "128": "icons/icon128.png",
+    //   "16": "icons/icon16.jpeg",
+    //   // "48": "icons/icon48.jpeg",
+    //   // "128": "icons/icon128.jpeg",
     // },
 
     permissions: ["storage"],

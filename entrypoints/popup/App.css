@@ -1,42 +1,54 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* IMPORTANT: html + body full cover */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #020617; /* same as popup */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #54bc4ae0);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Root wrapper */
+#app {
+  width: 100%;
+  height: 100%;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Actual popup */
+.popup {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+
+  background: linear-gradient(
+    135deg,
+    #020617,
+    #020617,
+    #020617
+  );
+
+  color: #e5e7eb;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Text */
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #22d3ee;
 }
 
-.card {
-  padding: 2em;
+.desc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #d1d5db;
 }
 
-.read-the-docs {
-  color: #888;
+.note {
+  margin-top: 10px;
+  font-size: 11px;
+  color: #94a3b8;
 }
+

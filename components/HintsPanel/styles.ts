@@ -7,7 +7,7 @@ export const getStyles = () => {
 
 
 
-  console.log('🎨 Body BG:', bodyBg, '| isDark:', isDark); // Debug
+  //  console.log('🎨 Body BG:', bodyBg, '| isDark:', isDark); // Debug
 
   return {
     containerStyle: {
