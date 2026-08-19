@@ -1,11 +1,13 @@
 export default defineContentScript({
   matches: [
     "https://cses.fi/problemset/task/*",
-    "https://cses.fi/problemset/result/*"
+    "https://cses.fi/problemset/result/*",
+    "https://cses.fi/problemset/submit/*",
   ],
   main() {
-    // Handle task pages (hints)
-    const taskMatch = window.location.pathname.match(/task\/(\d+)/);
+    // Handle task pages (hints) — NOT submit pages
+    const taskMatch = !window.location.pathname.includes("/submit/") &&
+      window.location.pathname.match(/task\/(\d+)/);
     if (taskMatch) {
       const problemId: string = taskMatch[1];
       console.log("CSES Problem ID:", problemId);

@@ -2,18 +2,23 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import SubmitSolution from "@/components/Submitsolution";
+import CodeEditor from "@/components/CodeEditor";
 
-// Hints panel mount karta hai (task pages ke liye)
-function mountReactApp() {
+// ── Hints panel ────────────────────────────────────────────────────────────────
+// Mounted into #cses-hints-root which the content script injects before "Your submissions"
+
+function mountHintsApp() {
   const rootDiv = document.getElementById("cses-hints-root");
   const match = window.location.pathname.match(/task\/(\d+)/);
-  const problemId = match && match[1];
+  const problemId = match?.[1];
   if (rootDiv && problemId) {
     createRoot(rootDiv).render(<App problemId={problemId} />);
   }
 }
 
-// Submit button mount karta hai (result pages ke liye)
+// ── Submit / Publish button ─────────────────────────────────────────────────────
+// Mounted into #cses-submit-root on result pages
+
 function mountSubmitSolution() {
   const rootDiv = document.getElementById("cses-submit-root");
   if (rootDiv) {
@@ -21,22 +26,50 @@ function mountSubmitSolution() {
   }
 }
 
-// Task pages ke liye observer
-if (!document.getElementById("cses-hints-root")) {
+// ── Code editor ────────────────────────────────────────────────────────────────
+// Adds a textarea below the file upload row — both options stay available
+
+function mountCodeEditor() {
+  // Avoid double-mounting
+  if (document.getElementById("cses-editor-root")) return;
+
+  const fileInput = document.querySelector('input[type="file"]');
+  if (!fileInput) {
+    console.log("❌ [CSES Editor] file input not found");
+    return;
+  }
+
+  console.log("✅ [CSES Editor] mounting...");
+
+  // Insert the editor div right after the file input's <p> row
+  const fileInputWrapper = fileInput.closest("p");
+  const insertAfter = fileInputWrapper ?? fileInput;
+
+  const editorRoot = document.createElement("div");
+  editorRoot.id = "cses-editor-root";
+  insertAfter.parentNode?.insertBefore(editorRoot, insertAfter.nextSibling);
+
+  createRoot(editorRoot).render(<CodeEditor />);
+}
+
+// ── Task pages: hints ──────────────────────────────────────────────────────────
+if (document.getElementById("cses-hints-root")) {
+  mountHintsApp();
+} else {
   const observer = new MutationObserver(() => {
     if (document.getElementById("cses-hints-root")) {
       observer.disconnect();
-      mountReactApp();
+      mountHintsApp();
     }
   });
   observer.observe(document.body, { childList: true, subtree: true });
-} else {
-  mountReactApp();
 }
 
-// Result pages ke liye observer
+// ── Result pages: publish button ───────────────────────────────────────────────
 if (window.location.pathname.match(/result\/(\d+)/)) {
-  if (!document.getElementById("cses-submit-root")) {
+  if (document.getElementById("cses-submit-root")) {
+    mountSubmitSolution();
+  } else {
     const observer = new MutationObserver(() => {
       if (document.getElementById("cses-submit-root")) {
         observer.disconnect();
@@ -44,7 +77,14 @@ if (window.location.pathname.match(/result\/(\d+)/)) {
       }
     });
     observer.observe(document.body, { childList: true, subtree: true });
+  }
+}
+
+// ── Submit pages: code editor ──────────────────────────────────────────────────
+if (window.location.pathname.includes("/problemset/submit/")) {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", mountCodeEditor);
   } else {
-    mountSubmitSolution();
+    mountCodeEditor();
   }
 }

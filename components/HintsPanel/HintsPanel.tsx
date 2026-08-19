@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-//import browser from 'webextension-polyfill';
-import { Browser } from "wxt/browser";
 import HINTS from "@/data/hints";
 import PROBLEM_TOPICS from "@/data/topics";
 import PROBLEM_RESOURCES from "@/data/resources";

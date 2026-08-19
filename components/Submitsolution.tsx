@@ -1,46 +1,12 @@
 import { useState } from "react";
 import { submitSolution } from "@/lib/api";
 import { getUsernameFromPage } from "@/lib/username";
-import { fetchSolutionLink } from "@/lib/solutionlink";
-
-function isAcceptedResultPage() {
-  const isResultUrl = /\/problemset\/result\/\d+\/?$/.test(
-    window.location.pathname
-  );
-  const verdictEl = document.querySelector(".inline-score.verdict");
-  return isResultUrl && !!verdictEl;
-}
-
-function fetchproblemLink(): string {
-  const taskLink = document.querySelector(
-    'table.summary-table tbody tr td a[href*="/problemset/task/"]'
-  );
-
-  if (taskLink instanceof HTMLAnchorElement) {
-    const match = taskLink.href.match(/\/problemset\/task\/(\d+)/);
-    return match ? match[1] : "";
-  }
-  return "";
-}
-
-function isAccepted(): boolean {
-  const rows = document.querySelectorAll("table.summary-table tbody tr");
-
-  for (const row of rows) {
-    const cells = row.querySelectorAll("td");
-    if (cells.length < 2) continue;
-
-    const label = cells[0].textContent?.trim();
-    if (label === "Result:") {
-      const verdictText = cells[1].textContent?.trim();
-      return verdictText === "ACCEPTED";
-    }
-  }
-
-  return false;
-}
-
-
+import {
+  fetchSolutionLink,
+  isAcceptedResultPage,
+  isVerdictAccepted,
+} from "@/lib/solutionlink";
+import { getProblemIdFromResultPage } from "@/lib/problemid";
 
 const containerStyle: React.CSSProperties = {
   margin: "12px 0",
@@ -57,56 +23,36 @@ const buttonStyle = (disabled: boolean): React.CSSProperties => ({
   boxShadow: "none",
 });
 
-const acceptedBadgeStyle: React.CSSProperties = {
-  display: "inline-block",
-  backgroundColor: "#5cb85c",
-  color: "#fff",
-  padding: "4px 10px",
-  fontSize: "13px",
-  fontWeight: 600,
-  textTransform: "uppercase",
-  lineHeight: "1",
-  marginTop: "8px",
-};
-
-const infoBadgeStyle: React.CSSProperties = {
-  display: "inline-block",
-  backgroundColor: "#f0ad4e", // warning
-  color: "#fff",
-  padding: "4px 10px",
-  fontSize: "13px",
-  fontWeight: 600,
-  lineHeight: "1",
-  marginTop: "8px",
-};
-
-
-
+/**
+ * Button rendered on CSES result pages to publish an accepted solution.
+ * Returns null if the current page is not a result page.
+ */
 export default function SubmitSolution() {
-
   if (!isAcceptedResultPage()) return null;
 
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<"success" | "notAccepted" | null>(null);
 
-  const problemId = fetchproblemLink();
+  const problemId = getProblemIdFromResultPage();
   const username = getUsernameFromPage() || "";
   const solutionLink = fetchSolutionLink();
-  const accepted = isAccepted();
+  const accepted = isVerdictAccepted();
 
-  const handleSubmit = async () => {
+  const handlePublish = async () => {
     setStatus(null);
+
+    // Guard: need all three pieces of data
     if (!solutionLink || !problemId || !username) return;
 
+    // Guard: only accepted solutions can be published
     if (!accepted) {
       setStatus("notAccepted");
       return;
     }
 
     setLoading(true);
-    setStatus(null);
-
     try {
+      console.log(problemId, username, solutionLink);
       await submitSolution({ problemId, username, solutionLink });
       setStatus("success");
     } catch {
@@ -119,24 +65,22 @@ export default function SubmitSolution() {
   return (
     <div style={containerStyle}>
       <button
-        onClick={handleSubmit}
+        onClick={handlePublish}
         disabled={loading}
         style={buttonStyle(loading)}
       >
-        {loading ? "Submitting..." : "Submit Solution"}
+        {loading ? "publishing..." : "Publish Solution"}
       </button>
 
       {status === "success" && (
-        <div style={containerStyle}>solution submitted</div>
+        <div style={containerStyle}>Solution published</div>
       )}
 
       {status === "notAccepted" && (
         <div style={containerStyle}>
-          You can only submit accepted solutions
+          You can only publish accepted solutions
         </div>
       )}
     </div>
   );
-
 }
-
