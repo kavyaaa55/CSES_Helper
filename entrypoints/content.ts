@@ -3,8 +3,12 @@ export default defineContentScript({
     "https://cses.fi/problemset/task/*",
     "https://cses.fi/problemset/result/*",
     "https://cses.fi/problemset/submit/*",
+    "https://cses.fi/problemset/",
+    "https://cses.fi/problemset",
+    "https://cses.fi/problemset/list/",
+    "https://cses.fi/problemset/list",
   ],
-  main() {
+  async main() {
     // Handle task pages (hints) — NOT submit pages
     const taskMatch = !window.location.pathname.includes("/submit/") &&
       window.location.pathname.match(/task\/(\d+)/);
@@ -71,6 +75,48 @@ export default defineContentScript({
           }
         });
         observer.observe(document.body, { childList: true, subtree: true });
+      }
+    }
+    // Handle problemset list page (notes buttons)
+    const isListPage =
+      window.location.pathname === "/problemset/" ||
+      window.location.pathname === "/problemset" ||
+      window.location.pathname === "/problemset/list/" ||
+      window.location.pathname === "/problemset/list";
+
+    if (isListPage) {
+      const { createNoteButton } = await import("@/components/NoteButton");
+
+      const injectNoteButtons = async () => {
+        const items = document.querySelectorAll<HTMLLIElement>("li.task");
+        if (items.length === 0) return;
+
+        const allStorage = await chrome.storage.local.get(null);
+
+        for (const li of items) {
+          const link = li.querySelector<HTMLAnchorElement>("a[href]");
+          if (!link) continue;
+          const match = link.getAttribute("href")?.match(/\/task\/(\d+)/);
+          if (!match) continue;
+          const problemId = match[1];
+          if (li.querySelector(`[data-cses-note-btn="${problemId}"]`)) continue;
+
+          const hasNote = !!(allStorage[`cses_note_${problemId}`] as string)?.trim();
+          const scoreSpan = li.querySelector("span.task-score");
+          const btn = createNoteButton(problemId, hasNote, scoreSpan);
+
+          if (scoreSpan) {
+            scoreSpan.insertAdjacentElement("afterend", btn);
+          } else {
+            li.appendChild(btn);
+          }
+        }
+      };
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", injectNoteButtons);
+      } else {
+        await injectNoteButtons();
       }
     }
   },
