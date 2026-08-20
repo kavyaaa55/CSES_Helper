@@ -104,14 +104,14 @@ export default function HintsPanel({ problemId }: Props) {
         <ViewSolution questionId={problemId} />
       )}
 
-      {/* Resources Section */}
-      {settings.resources && (
+      {/* Resources Section — hidden from UI, feature kept intact */}
+      {/* {settings.resources && (
         <ResourcesPanel
           resources={resources}
           open={!!open.resources}
           toggle={() => toggle("resources")}
         />
-      )}
+      )} */}
     </div>
   );
 }

@@ -30,7 +30,6 @@ function mountSubmitSolution() {
 // Adds a textarea below the file upload row — both options stay available
 
 function mountCodeEditor() {
-  // Avoid double-mounting
   if (document.getElementById("cses-editor-root")) return;
 
   const fileInput = document.querySelector('input[type="file"]');
@@ -41,13 +40,23 @@ function mountCodeEditor() {
 
   console.log("✅ [CSES Editor] mounting...");
 
-  // Insert the editor div right after the file input's <p> row
+  // Find the language <p> row (contains the #lang select)
+  const langSelect = document.getElementById("lang");
+  const langRow = langSelect?.closest("p");
+
+  // Insert the editor root after the file input row
   const fileInputWrapper = fileInput.closest("p");
   const insertAfter = fileInputWrapper ?? fileInput;
 
   const editorRoot = document.createElement("div");
   editorRoot.id = "cses-editor-root";
   insertAfter.parentNode?.insertBefore(editorRoot, insertAfter.nextSibling);
+
+  // Move the language row to sit above the textarea (inside editor root's parent, just before it)
+  if (langRow && langRow.parentNode) {
+    langRow.parentNode.removeChild(langRow);
+    editorRoot.parentNode?.insertBefore(langRow, editorRoot);
+  }
 
   createRoot(editorRoot).render(<CodeEditor />);
 }

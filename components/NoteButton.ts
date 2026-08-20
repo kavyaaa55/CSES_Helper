@@ -23,6 +23,8 @@ async function saveNote(problemId: string, text: string): Promise<void> {
 /** Tracks the currently open popup so we can close it when opening another */
 let activePopup: HTMLElement | null = null;
 let activeBtn: HTMLElement | null = null;
+// Single global outside-click listener registered once
+let outsideClickListenerRegistered = false;
 
 function closeActivePopup() {
   if (activePopup) {
@@ -30,9 +32,22 @@ function closeActivePopup() {
     activePopup = null;
   }
   if (activeBtn) {
-    activeBtn.style.opacity = "0.5";
+    activeBtn.style.opacity = "0.35";
     activeBtn = null;
   }
+}
+
+function ensureOutsideClickListener() {
+  if (outsideClickListenerRegistered) return;
+  outsideClickListenerRegistered = true;
+  // Use mousedown instead of click to avoid racing with the button's own click handler
+  document.addEventListener("mousedown", (e) => {
+    if (!activePopup) return;
+    const target = e.target as Node;
+    if (activePopup.contains(target)) return;
+    if (activeBtn && activeBtn.contains(target)) return;
+    closeActivePopup();
+  });
 }
 
 /**
@@ -95,18 +110,21 @@ export function createNoteButton(problemId: string, hasNote: boolean, scoreSpan?
     document.body.appendChild(popup);
     activePopup = popup;
 
-    // Position the popup near the button
+    // Position with fixed so scroll doesn't affect it
     const rect = btn.getBoundingClientRect();
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
+    const popupWidth = 360;
 
-    let top = rect.bottom + scrollTop + 4;
-    let left = rect.left + scrollLeft;
+    let top = rect.bottom + 4;
+    let left = rect.left;
 
     // Keep within viewport horizontally
-    const popupWidth = 360;
-    if (left + popupWidth > window.innerWidth + scrollLeft - 8) {
-      left = window.innerWidth + scrollLeft - popupWidth - 8;
+    if (left + popupWidth > window.innerWidth - 8) {
+      left = window.innerWidth - popupWidth - 8;
+    }
+    // Keep within viewport vertically — flip above if not enough space below
+    const popupHeight = 260;
+    if (top + popupHeight > window.innerHeight - 8) {
+      top = rect.top - popupHeight - 4;
     }
 
     popup.style.top = `${top}px`;
@@ -116,16 +134,7 @@ export function createNoteButton(problemId: string, hasNote: boolean, scoreSpan?
     textarea?.focus();
   });
 
-  // Close popup on outside click
-  document.addEventListener("click", (e) => {
-    if (
-      activePopup &&
-      !activePopup.contains(e.target as Node) &&
-      e.target !== btn
-    ) {
-      closeActivePopup();
-    }
-  });
+  ensureOutsideClickListener();
 
   return btn;
 }
@@ -144,7 +153,7 @@ function buildPopup(
   const popup = document.createElement("div");
   popup.setAttribute("data-cses-note-popup", problemId);
   popup.style.cssText = `
-    position: absolute;
+    position: fixed;
     z-index: 99999;
     width: 360px;
     background: ${bg};
@@ -223,3 +232,68 @@ function buildPopup(
 
   return popup;
 }
+
+// ── Star button ────────────────────────────────────────────────────────────────
+
+const STAR_KEY_PREFIX = "cses_star_";
+
+async function getStar(problemId: string): Promise<boolean> {
+  const result = await chrome.storage.local.get(STAR_KEY_PREFIX + problemId);
+  return !!(result[STAR_KEY_PREFIX + problemId]);
+}
+
+async function setStar(problemId: string, val: boolean): Promise<void> {
+  await chrome.storage.local.set({ [STAR_KEY_PREFIX + problemId]: val });
+}
+
+/**
+ * Creates a star toggle button sized to match the score span.
+ * Yellow when starred, light grey when not.
+ */
+export function createStarButton(problemId: string, starred: boolean, scoreSpan?: Element | null): HTMLElement {
+  const scoreRect = scoreSpan?.getBoundingClientRect();
+  const w = scoreRect && scoreRect.width > 0 ? `${Math.round(scoreRect.width * 0.7)}px` : "22px";
+  const h = scoreRect && scoreRect.height > 0 ? `${scoreRect.height}px` : "22px";
+  const iconSize = scoreRect && scoreRect.height > 0 ? Math.round(scoreRect.height * 0.55) : 13;
+
+  let isStarred = starred;
+
+  const btn = document.createElement("span");
+  btn.title = "Star this problem";
+  btn.setAttribute("data-cses-star-btn", problemId);
+  btn.style.cssText = `
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    width: ${w};
+    height: ${h};
+    vertical-align: middle;
+    transition: opacity 0.15s;
+    position: relative;
+    box-sizing: border-box;
+  `;
+
+  const render = () => {
+    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24"
+      fill="${isStarred ? "#f5c518" : "none"}"
+      stroke="${isStarred ? "#f5c518" : "#888"}"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+    </svg>`;
+  };
+
+  render();
+
+  btn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    isStarred = !isStarred;
+    await setStar(problemId, isStarred);
+    render();
+  });
+
+  return btn;
+}
+
+export { getStar };

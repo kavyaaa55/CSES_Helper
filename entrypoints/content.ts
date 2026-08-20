@@ -85,7 +85,7 @@ export default defineContentScript({
       window.location.pathname === "/problemset/list";
 
     if (isListPage) {
-      const { createNoteButton } = await import("@/components/NoteButton");
+      const { createNoteButton, createStarButton } = await import("@/components/NoteButton");
 
       const injectNoteButtons = async () => {
         const items = document.querySelectorAll<HTMLLIElement>("li.task");
@@ -102,13 +102,18 @@ export default defineContentScript({
           if (li.querySelector(`[data-cses-note-btn="${problemId}"]`)) continue;
 
           const hasNote = !!(allStorage[`cses_note_${problemId}`] as string)?.trim();
+          const isStarred = !!(allStorage[`cses_star_${problemId}`]);
           const scoreSpan = li.querySelector("span.task-score");
-          const btn = createNoteButton(problemId, hasNote, scoreSpan);
+
+          const noteBtn = createNoteButton(problemId, hasNote, scoreSpan);
+          const starBtn = createStarButton(problemId, isStarred, scoreSpan);
 
           if (scoreSpan) {
-            scoreSpan.insertAdjacentElement("afterend", btn);
+            scoreSpan.insertAdjacentElement("afterend", starBtn);
+            scoreSpan.insertAdjacentElement("afterend", noteBtn);
           } else {
-            li.appendChild(btn);
+            li.appendChild(noteBtn);
+            li.appendChild(starBtn);
           }
         }
       };

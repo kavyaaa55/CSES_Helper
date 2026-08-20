@@ -1,54 +1,9 @@
-/* IMPORTANT: html + body full cover */
-html,
-body {
+html, body {
   margin: 0;
   padding: 0;
-  width: 100%;
-  height: 100%;
-  background: #020617; /* same as popup */
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  width: 300px;
 }
 
-/* Root wrapper */
-#app {
-  width: 100%;
-  height: 100%;
+#root {
+  width: 300px;
 }
-
-/* Actual popup */
-.popup {
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-  padding: 16px;
-
-  background: linear-gradient(
-    135deg,
-    #020617,
-    #020617,
-    #020617
-  );
-
-  color: #e5e7eb;
-}
-
-/* Text */
-.title {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 8px;
-  color: #22d3ee;
-}
-
-.desc {
-  font-size: 13px;
-  line-height: 1.5;
-  color: #d1d5db;
-}
-
-.note {
-  margin-top: 10px;
-  font-size: 11px;
-  color: #94a3b8;
-}
-

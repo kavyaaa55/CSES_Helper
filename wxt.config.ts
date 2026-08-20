@@ -4,7 +4,7 @@ export default defineConfig({
   manifest: {
     name: "CSES Helper",
     description: "Get hints and topic tags directly on CSES problems",
-    version: "1.0.0",
+    version: "1.0.3",
 
     action: {
       default_title: "CSES Helper",
