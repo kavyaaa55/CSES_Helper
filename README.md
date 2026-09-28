@@ -1,6 +1,6 @@
 # CSESHelper
 
-> 🚀 Chrome Extension to supercharge your CSES problem solving experience!
+> 🚀 Chrome Extension to supercharge your CSES problem solving experience! (100+ installs)
 
 ## Features
 - 💡 Contextual hints for CSES problems
